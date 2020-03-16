@@ -4,7 +4,7 @@ using System.Linq;
 namespace Ultrasound
 {
     /// <summary>
-    /// Создаёт первоначальные объекты и
+    /// Создаёт первоначальные препятствия и
     /// первоначально управляет ими.
     /// </summary>
     class Program
