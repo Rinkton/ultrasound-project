@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ultrasound
 {
@@ -16,22 +12,37 @@ namespace Ultrasound
         /// Объявление нового Sender-а.
         /// </summary>
         /// <param name="x">Позиция появления в мире по X.</param>
-        public Sender(int x) { }
+        public Sender(int x)
+        {
+            PosX = x;
+
+            SignUp(this); //Активируем метод родительского класса (Obstacle).
+        }
 
         /// <summary>
-        /// Контроллирует всю операцию - от отправки лазера до получения расстояния.
+        /// Контроллирует всю операцию - от отправки лазера до вывода расстояния.
         /// </summary>
         /// <param name="toRight">В какую сторону направить лазер.</param>
-        public void Main(bool toRight) { }
+        public void Main(bool toRight)
+        {
+            byte time = Send(toRight);
+
+            byte distance = CalculateDist(time);
+
+            DisplayResult(distance);
+        }
 
         /// <summary>
-        /// Отправляет лазер.
+        /// Отправляет лазер и получает его.
         /// </summary>
         /// <param name="toRight">В какую сторону пускать.</param>
         /// <returns>Время до возвращения лазера.</returns>
         private byte Send(bool toRight)
         {
-            return 0;
+            Laser laser = new Laser(toRight, PosX);
+            byte time = laser.Main();
+
+            return time;
         }
 
         /// <summary>
@@ -41,13 +52,32 @@ namespace Ultrasound
         /// <returns>Дистанция.</returns>
         private byte CalculateDist(byte time)
         {
-            return 0;
+            byte distance;
+
+            if (time != 0) //Ибо если time = 0, то если поделить его на 2, то возникнет математическая ошибка.
+                distance = Convert.ToByte(time / 2);
+            else
+                distance = 0;
+
+            return distance;
         }
 
         /// <summary>
-        /// Выводит результат, то - есть саму дистанцию в консоль.
+        /// Выводит результат: саму дистанцию в консоль или сообщение о потери лазера.
         /// </summary>
         /// <param name="distance">Дистанция.</param>
-        private void DisplayResult(byte distance) { }
+        private void DisplayResult(byte distance)
+        {
+            if (distance != 0)
+            {
+                Console.WriteLine($"Дистанция равна {distance}.");
+            }
+            else
+            {
+                Console.WriteLine("Лазер был потерян...");
+            }
+
+            Console.ReadKey(true); //true - не отображать нажатую клавишу в консоли.
+        }
     }
 }

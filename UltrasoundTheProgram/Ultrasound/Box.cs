@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ultrasound
+﻿namespace Ultrasound
 {
     /// <summary>
     /// Препятствие, которое может быть задетым Laser-ом.
@@ -15,6 +9,11 @@ namespace Ultrasound
         /// Объявление новой коробки.
         /// </summary>
         /// <param name="x">Позиция по X.</param>
-        public Box(int x) { }
+        public Box(int x)
+        {
+            PosX = x;
+
+            SignUp(this);
+        }
     }
 }

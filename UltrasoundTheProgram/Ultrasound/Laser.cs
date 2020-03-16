@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ultrasound
+﻿namespace Ultrasound
 {
     /// <summary>
     /// Идёт в указанном направлении, каждый раз проверяет контакт с внеш. миром,
@@ -31,7 +25,7 @@ namespace Ultrasound
         /// <summary>
         /// Время, проведённое в пространстве.
         /// </summary>
-        private byte Time;
+        private byte Time = 0;
 
 
         /// <summary>
@@ -39,21 +33,57 @@ namespace Ultrasound
         /// </summary>
         /// <param name="toRight">В какую сторону.</param>
         /// <param name="senderPosX">Позиция отправившего отправителя по X.</param>
-        public Laser(bool toRight, int senderPosX) { }
+        public Laser(bool toRight, int senderPosX)
+        {
+            ToRight = toRight;
+            SenderPosX = senderPosX;
+            PosX = senderPosX;
+        }
 
         /// <summary>
         /// Контроллирует все действия, которые должны быть выполнены на каждой новой координате X.
         /// </summary>
         /// <returns>Время, проведённое в пространстве.</returns>
-        private byte Main()
+        public byte Main()
         {
-            return 0;
+            while (true)
+            {
+                //Лазер не может находится в пространстве больше 255 единиц времени, в противном случае он теряется
+                if (Time != 255)
+                    Step();
+                else
+                    return 0;
+
+                bool isContact = Check();
+
+                if (isContact)
+                {
+                    if (PosX == SenderPosX)
+                        return Time;
+                    else
+                        ToRight = !ToRight; //Поворачиваем лазер в другую сторону.
+                }
+            }
         }
 
         /// <summary>
         /// Делает шаг в указанную сторону по X.
         /// </summary>
-        private void Step() { }
+        private void Step()
+        {
+            switch (ToRight)
+            {
+                case true:
+                    PosX++;
+                    break;
+
+                default:
+                    PosX--;
+                    break;
+            }
+
+            Time++;
+        }
 
         /// <summary>
         /// Проверяет, обращаясь к Environment-у, не соприкоснулся ли лазер с чем - нибудь.
@@ -61,7 +91,10 @@ namespace Ultrasound
         /// <returns>Соприкоснулся с чем - нибудь или нет.</returns>
         private bool Check()
         {
-            return false;
+            Environment environment = Environment.GetInstance();
+            bool isContact = environment.CheckPlace(PosX);
+
+            return isContact;
         }
     }
 }

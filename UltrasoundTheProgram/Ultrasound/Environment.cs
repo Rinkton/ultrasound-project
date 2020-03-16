@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ultrasound
 {
@@ -14,12 +11,17 @@ namespace Ultrasound
         /// <summary>
         /// Список всех препятствий в мире.
         /// </summary>
-        private List<Obstacle> Obstacles;
+        private List<Obstacle> Obstacles = new List<Obstacle>();
 
         /// <summary>
         /// Список всех позиций X у препятствий в мире.
         /// </summary>
-        private List<int> PositionsX;
+        private List<int> PositionsX = new List<int>();
+
+        /// <summary>
+        /// Тут хранится единый экземпляр класса Environment.
+        /// </summary>
+        private static Environment Instance;
 
 
         /// <summary>
@@ -33,7 +35,10 @@ namespace Ultrasound
         /// <returns>Уже имеющийся экземпляр или новый.</returns>
         public static Environment GetInstance()
         {
-            return null;
+            if (Instance == null)
+                Instance = new Environment();
+
+            return Instance;
         }
 
         /// <summary>
@@ -41,7 +46,20 @@ namespace Ultrasound
         /// </summary>
         /// <param name="obstacle">Вид препятствия.</param>
         /// <param name="posX">Позиция по X.</param>
-        public void Initialize(Obstacle obstacle, int posX) { }
+        public void Initialize(Obstacle obstacle, int posX)
+        {
+            bool isTaken = CheckPlace(posX);
+
+            if (isTaken == false && obstacle != null)
+            {
+                Obstacles.Add(obstacle);
+                PositionsX.Add(posX);
+            }
+            else
+            {
+                throw new Exception("Выбранная вами позиция препятствия уже занята или посланное вами препятствие равно null.");
+            }
+        }
 
         /// <summary>
         /// Проверяет, нет ли на выданной координате какого - нибудь объекта,
@@ -51,6 +69,12 @@ namespace Ultrasound
         /// <returns>Есть на координате что - то или нет.</returns>
         public bool CheckPlace(int posX)
         {
+            foreach (int x in PositionsX)
+            {
+                if (posX == x)
+                    return true;
+            }
+
             return false;
         }
     }

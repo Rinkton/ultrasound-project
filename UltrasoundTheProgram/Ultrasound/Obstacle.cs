@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ultrasound
+﻿namespace Ultrasound
 {
     /// <summary>
-    /// Родительский класс от которого наследуются все предметы в мире.
+    /// Родительский класс от которого наследуются все препятствия в мире.
     /// </summary>
     class Obstacle
     {
@@ -22,6 +16,10 @@ namespace Ultrasound
         /// </summary>
         /// <param name="obstacle">Вид препятствия.</param>
         /// <param name="x">Позиция по X.</param>
-        public void SignUp(Obstacle obstacle, int x) { }
+        public void SignUp(Obstacle obstacle)
+        {
+            Environment environment = Environment.GetInstance();
+            environment.Initialize(obstacle, obstacle.PosX);
+        }
     }
 }
